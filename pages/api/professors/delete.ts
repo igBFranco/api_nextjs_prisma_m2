@@ -1,8 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from "../db/db";
 
-// GET /api/students
+// DELETE /api/professors
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const result = await prisma.public_students.findMany()
+  const professorId = req.query.id;
+  
+  const result = await prisma.public_professors.delete({
+    where: { id: Number(professorId)}
+  })
   res.json(result)
 }
