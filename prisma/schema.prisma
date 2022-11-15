@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model public_courses {
+  id                Int               @id(map: "courses_pk") @default(autoincrement())
+  fk_student        Int
+  fk_professor      Int
+  name              String            @db.VarChar(255)
+  description       String            @db.VarChar(255)
+  public_students   public_students   @relation(fields: [fk_student], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "courses_fk0")
+  public_professors public_professors @relation(fields: [fk_professor], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "courses_fk1")
+
+  @@map("public.courses")
+}
+
+model public_professors {
+  id             Int              @id(map: "professors_pk") @default(autoincrement())
+  name           String           @db.VarChar(255)
+  email          String           @db.VarChar(255)
+  password       String           @db.VarChar(255)
+  public_courses public_courses[]
+
+  @@map("public.professors")
+}
+
+model public_students {
+  id             Int              @id(map: "students_pk") @default(autoincrement())
+  name           String           @db.VarChar(50)
+  email          String           @db.VarChar(50)
+  password       String           @db.VarChar(50)
+  public_courses public_courses[]
+
+  @@map("public.students")
+}
